@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class UserControllerTest extends TestCase
 {
-    // Reset the database after each test
+    // use RefreshDatabase; // Reset the database after each test
 
     /**
      * Test validation error response.
