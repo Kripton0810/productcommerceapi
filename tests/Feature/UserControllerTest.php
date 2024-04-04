@@ -5,18 +5,18 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class UserControllerTest extends TestCase
 {
-    use RefreshDatabase; // Reset the database after each test
+    // Reset the database after each test
 
     /**
      * Test validation error response.
      */
     public function test_validation_error_response()
     {
-        $this->withoutExceptionHandling();
         $response = $this->postJson('/api/register', []);
         // dd($response->json());
         $response->assertStatus(422)->assertJson([
@@ -41,6 +41,7 @@ class UserControllerTest extends TestCase
      */
     public function test_successful_registration()
     {
+        $this->artisan('optimize:clear');
         $userData = [
             'name' => 'John Doe',
             'email' => 'john@example.com',

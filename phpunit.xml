@@ -21,15 +21,17 @@
         <server name="APP_ENV" value="testing" />
         <server name="BCRYPT_ROUNDS" value="4" />
         <server name="CACHE_DRIVER" value="array" />
-        <server name="TEST_DB_CONNECTION" value="mysql" />
-        <server name="TEST_DB_DATABASE" value="productcommerceapitest" />
+        <env name="DB_CONNECTION" value="mysql" />
+        <env name="DB_DATABASE" value="productcommerceapi" />
+        <env name="DB_USERNAME" value="root" />
+        <env name="DB_PASSWORD" value="" />
         <server name="MAIL_MAILER" value="array" />
         <server name="QUEUE_CONNECTION" value="sync" />
         <server name="SESSION_DRIVER" value="array" />
         <server name="TELESCOPE_ENABLED" value="false" />
         <server name="PASSPORT_PERSONAL_ACCESS_CLIENT_ID"
-            value="9bb969bb-5ba5-4757-af8b-370105280abb" />
+            value="9bb99544-8b0f-428f-96c1-ec78bbe81956" />
         <server name="PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET"
-            value="XYnrh8zUc6FKgXSOOFcPY0I1VpFkszzOKCNhgDhm" />
+            value="NlGaT640z2AG6eNIkfsJzo1OedUkTJjvi4c9w4ut" />
     </php>
 </phpunit>

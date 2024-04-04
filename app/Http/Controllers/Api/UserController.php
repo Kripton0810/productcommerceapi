@@ -64,6 +64,10 @@ class UserController extends Controller
             return response()->json(['success' => true, 'data' => $user, 'message' => 'User has been created successfully']);
         } catch (\Throwable $th) {
             DB::rollBack();
+            // echo "<pre>";
+            // print_r($th);
+            // echo "</pre>";
+
             return response()->json(['status' => false, 'message' => 'Server error', 'errors' => $th->getMessage()], 400); // Return validation errors as JSON
         }
     }
