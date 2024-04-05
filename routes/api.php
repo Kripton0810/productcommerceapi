@@ -25,3 +25,4 @@ Route::post('/login', [UserController::class, 'login']);
 Route::post('/user/{id}', [UserController::class, 'show'])->middleware(["auth:api"]);
 
 Route::post('/customer/store', [CustomerController::class, 'store']);
+Route::put('/customer/update/{id}', [CustomerController::class, 'update']);
