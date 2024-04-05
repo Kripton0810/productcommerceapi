@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,3 +23,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/register', [UserController::class, 'store']);
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/user/{id}', [UserController::class, 'show'])->middleware(["auth:api"]);
+
+Route::post('/customer/store', [CustomerController::class, 'store']);
