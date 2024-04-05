@@ -41,4 +41,17 @@ class CustomerTest extends TestCase
                 'message'
             ]);
     }
+    public function test_customer_unsuccess_register()
+    {
+        $userData = [];
+
+        $response = $this->postJson('/api/customer/store', $userData);
+
+        $response->assertStatus(422)
+            ->assertJsonStructure([
+                'status',
+                'errors' => [],
+                'message'
+            ]);
+    }
 }
