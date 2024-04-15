@@ -17,7 +17,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(['success' => true, 'data' => Customer::all(), 'message' => 'Customer has been fetched successfully']);
     }
 
     /**
@@ -72,9 +72,13 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Customer  $customer)
     {
-        //
+        try {
+            return response()->json(['success' => true, 'data' => $customer, 'message' => 'Customer has been fetched successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => false, 'message' => 'Error ', 'errors' => $th->getMessage()], 422); // Return validation errors as JSON
+        }
     }
 
     /**
@@ -126,8 +130,9 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Customer $customer)
     {
-        //
+        $customer->delete();
+        return response()->json(['success' => true, 'message' => 'Customer has been deleted successfully']);
     }
 }
