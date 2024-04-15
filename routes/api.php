@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\BillingController;
 use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,3 +28,6 @@ Route::post('/user/{id}', [UserController::class, 'show'])->middleware(["auth:ap
 
 Route::post('/customer/store', [CustomerController::class, 'store']);
 Route::put('/customer/update/{id}', [CustomerController::class, 'update']);
+
+Route::resource('product', ProductController::class);
+Route::resource('billing', BillingController::class);
