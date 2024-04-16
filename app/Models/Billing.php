@@ -13,4 +13,9 @@ class Billing extends Model
     {
         return $this->belongsToMany(Product::class)->withPivot('quantity', 'price')->withTimestamps();
     }
+    //belong to a customer
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
 }

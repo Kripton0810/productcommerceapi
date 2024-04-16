@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SendBillMail;
 use App\Models\Billing;
+use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class BillingController extends Controller
 {
@@ -16,7 +20,7 @@ class BillingController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(['success' => true, 'data' => Billing::with('products', 'customer')->get(), 'message' => 'Bills has been fetched successfully']);
     }
 
     /**
@@ -37,17 +41,24 @@ class BillingController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'customer_id' => 'required|exists:customers,id',
             'products' => 'required|array',
             'products.*.id' => 'required|exists:products,id',
             'products.*.quantity' => 'required|integer|min:1',
         ]);
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'message' => 'Error while validation', 'errors' => $validator->errors()], 422); // Return validation errors as JSON
+        }
 
         $bill = new Billing();
         $bill->customer_id = $request->customer_id;
+        $customer = Customer::findOrFail($request->customer_id);
         $bill->bill_number = 'BILL' . date('YmdHis');
+        $bill->total_amount = 0;
+        $bill->save();
         $totalAmount = 0;
+        $rows = [];
 
         foreach ($request->products as $item) {
             $product = Product::find($item['id']);
@@ -61,13 +72,16 @@ class BillingController extends Controller
             $product->save();
 
             $totalAmount += $product->price * $quantity;
-            $bill->products()->attach($product->id, ['quantity' => $quantity, 'price' => $product->price]);
+            $bill->products()->attach($product->id, ['quantity' => $quantity, 'price' => $product->price, 'billing_id' => $bill->id]);
+            $rows[] = ['name' => $product->name, 'qty' => $quantity, 'price' => $product->price];
         }
 
         $bill->total_amount = $totalAmount;
         $bill->save();
 
-        return response()->json($bill, 201);
+        $mail = Mail::to("subhankar0810@gmail.com")->send(new SendBillMail($customer->name, $bill->bill_number, $totalAmount, $rows));
+
+        return response()->json(['success' => true, 'data' => $bill, 'message' => 'Bill has been created successfully']);
     }
 
     /**
@@ -78,7 +92,13 @@ class BillingController extends Controller
      */
     public function show($id)
     {
+        $bill = Billing::with('products', 'customer')->where('id', $id)->get()->first();
         //
+        try {
+            return response()->json(['success' => true, 'data' => $bill, 'message' => 'Customer has been fetched successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => false, 'message' => 'Error ', 'errors' => $th->getMessage()], 422); // Return validation errors as JSON
+        }
     }
 
     /**

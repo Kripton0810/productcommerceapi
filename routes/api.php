@@ -38,4 +38,6 @@ Route::get('product/{product}', [ProductController::class, 'show']);
 Route::put('product/{product}', [ProductController::class, 'update']);
 Route::delete('product/{product}', [ProductController::class, 'destroy']);
 
-Route::resource('billing', BillingController::class);
+Route::post('billing', [BillingController::class, 'store']);
+Route::get('billing', [BillingController::class, 'index']);
+Route::get('billing/{id}', [BillingController::class, 'show']);
