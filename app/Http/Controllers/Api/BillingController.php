@@ -54,7 +54,9 @@ class BillingController extends Controller
         $bill = new Billing();
         $bill->customer_id = $request->customer_id;
         $customer = Customer::findOrFail($request->customer_id);
-        $bill->bill_number = 'BILL' . date('YmdHis');
+        $random_char1 = chr(rand(65, 90));
+        $random_char2 = chr(rand(65, 90));
+        $bill->bill_number = 'BILL' . $random_char1 . date('YmdHis') . $random_char2;
         $bill->total_amount = 0;
         $bill->save();
         $totalAmount = 0;

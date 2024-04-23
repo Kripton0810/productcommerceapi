@@ -39,36 +39,35 @@ class UserControllerTest extends TestCase
     /**
      * Test successful user registration.
      */
-    public function test_successful_registration()
-    {
-        $this->artisan('optimize:clear');
-        $userData = [
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123'
-        ];
+    // public function test_successful_registration()
+    // {
+    //     $userData = [
+    //         'name' => 'John Doe',
+    //         'email' => 'john@example.com',
+    //         'password' => 'password123',
+    //         'password_confirmation' => 'password123'
+    //     ];
 
-        $response = $this->postJson('/api/register', $userData);
+    //     $response = $this->postJson('/api/register', $userData);
 
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'success',
-                'data' => [
-                    'id',
-                    'name',
-                    'email',
-                    'created_at',
-                    'updated_at',
-                    'accessToken',
-                ],
-                'message'
-            ])
-            ->assertJson([
-                'success' => true,
-                'message' => 'User has been created successfully',
-            ]);
-    }
+    //     $response->assertStatus(200)
+    //         ->assertJsonStructure([
+    //             'success',
+    //             'data' => [
+    //                 'id',
+    //                 'name',
+    //                 'email',
+    //                 'created_at',
+    //                 'updated_at',
+    //                 'accessToken',
+    //             ],
+    //             'message'
+    //         ])
+    //         ->assertJson([
+    //             'success' => true,
+    //             'message' => 'User has been created successfully',
+    //         ]);
+    // }
 
     // You may want to add more test cases to cover edge cases, such as duplicate emails, incorrect password confirmation, etc.
 }

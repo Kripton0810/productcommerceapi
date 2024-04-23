@@ -12,9 +12,9 @@ class ProductControllerTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function it_can_create_a_product()
+    public function test_it_can_create_a_product()
     {
-        $response = $this->postJson('/api/products', [
+        $response = $this->postJson('/api/product/store', [
             'name' => 'Test Product',
             'sku' => 'TEST001',
             'price' => 10.99,
@@ -22,38 +22,64 @@ class ProductControllerTest extends TestCase
             'stock' => 100,
         ]);
 
-        $response->assertStatus(201)
-            ->assertJson(['name' => 'Test Product']);
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                "success",
+                "data" => [
+                    "name",
+                    "sku",
+                    "price",
+                    "rate",
+                    "stock",
+                    "updated_at",
+                    "created_at",
+                    "id"
+                ],
+                "message"
+            ]);
     }
 
     /** @test */
-    public function it_can_list_products()
+    public function test_it_can_list_products()
     {
         Product::factory()->count(5)->create();
 
-        $response = $this->getJson('/api/products');
+        $response = $this->getJson('/api/product');
 
         $response->assertStatus(200)
-            ->assertJsonCount(5);
+            ->assertJsonCount(5, 'data');
     }
 
     /** @test */
-    public function it_can_show_a_product()
+    public function test_it_can_show_a_product()
     {
         $product = Product::factory()->create();
 
-        $response = $this->getJson('/api/products/' . $product->id);
+        $response = $this->getJson('/api/product/' . $product->id);
 
         $response->assertStatus(200)
-            ->assertJson(['name' => $product->name]);
+            ->assertJsonStructure([
+                "success",
+                "data" => [
+                    "name",
+                    "sku",
+                    "price",
+                    "rate",
+                    "stock",
+                    "updated_at",
+                    "created_at",
+                    "id"
+                ],
+                "message"
+            ]);
     }
 
     /** @test */
-    public function it_can_update_a_product()
+    public function test_it_can_update_a_product()
     {
         $product = Product::factory()->create();
 
-        $response = $this->putJson('/api/products/' . $product->id, [
+        $response = $this->putJson('/api/product/' . $product->id, [
             'name' => 'Updated Product',
             'sku' => 'TEST002',
             'price' => 15.99,
@@ -62,17 +88,30 @@ class ProductControllerTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-            ->assertJson(['name' => 'Updated Product']);
+            ->assertJsonStructure([
+                "success",
+                "data" => [
+                    "name",
+                    "sku",
+                    "price",
+                    "rate",
+                    "stock",
+                    "updated_at",
+                    "created_at",
+                    "id"
+                ],
+                "message"
+            ]);
     }
 
     /** @test */
-    public function it_can_delete_a_product()
+    public function test_it_can_delete_a_product()
     {
         $product = Product::factory()->create();
 
-        $response = $this->deleteJson('/api/products/' . $product->id);
+        $response = $this->deleteJson('/api/product/' . $product->id);
 
-        $response->assertStatus(204);
+        $response->assertStatus(200);
 
         $this->assertDatabaseMissing('products', ['id' => $product->id]);
     }

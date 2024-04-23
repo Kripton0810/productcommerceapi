@@ -65,6 +65,9 @@ class CustomerController extends Controller
 
             // echo $response->getBody();
             $data = json_decode($response->getBody());
+            if (count($data->data) != 1) {
+                return response()->json(['status' => false, 'message' => 'Please enter a valid company name or complete name'], 400); // Return validation errors as JSON
+            }
 
             $companyID = $data->data[0]->companyID;
             $client = new Client();
