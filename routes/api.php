@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\BillingController;
+use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,4 +24,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/register', [UserController::class, 'store']);
 Route::post('/login', [UserController::class, 'login']);
-Route::post('/user/{id}', [UserController::class, 'show'])->middleware(["auth:api"]);
+Route::get('/user/{id}', [UserController::class, 'show'])->middleware(["auth:api"]);
+
+Route::post('/customer/store', [CustomerController::class, 'store']);
+Route::get('/customer', [CustomerController::class, 'index']);
+Route::get('/customer/{customer}', [CustomerController::class, 'show']);
+Route::put('/customer/update/{id}', [CustomerController::class, 'update']);
+Route::delete('customer/{product}', [CustomerController::class, 'destroy']);
+
+Route::post('product/store', [ProductController::class, 'store']);
+Route::get('product', [ProductController::class, 'index']);
+Route::get('product/{product}', [ProductController::class, 'show']);
+Route::put('product/{product}', [ProductController::class, 'update']);
+Route::delete('product/{product}', [ProductController::class, 'destroy']);
+
+Route::post('billing', [BillingController::class, 'store']);
+Route::get('billing', [BillingController::class, 'index']);
+Route::get('billing/{id}', [BillingController::class, 'show']);
