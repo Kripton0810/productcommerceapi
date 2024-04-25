@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -14,7 +15,16 @@ class ProductControllerTest extends TestCase
     /** @test */
     public function test_it_can_create_a_product()
     {
-        $response = $this->postJson('/api/product/store', [
+        // Assuming you have a user created with Passport and have obtained a token
+        // $user = \App\Models\User::factory()->create();
+        // $token = $user->createToken('TestToken')->accessToken;
+
+        $headers = [
+            'Accept' => 'application/json',
+            // 'Authorization' => 'Bearer ' . $token,
+        ];
+
+        $response = $this->withHeaders($headers)->postJson('/api/product/store', [
             'name' => 'Test Product',
             'sku' => 'TEST001',
             'price' => 10.99,
@@ -88,20 +98,45 @@ class ProductControllerTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-            ->assertJsonStructure([
-                "success",
+            ->assertJson([
+                "success" => true,
                 "data" => [
-                    "name",
-                    "sku",
-                    "price",
-                    "rate",
-                    "stock",
-                    "updated_at",
-                    "created_at",
-                    "id"
+                    "name" => "Updated Product",
+                    "sku" => "TEST002",
+                    "price" => 15.99,
+                    "rate" => 5,
+                    "stock" => 150,
+                    "updated_at" => true,
+                    "created_at" => true,
+                    "id" => $product->id
                 ],
-                "message"
+                "message" => "Product has been updated successfully"
             ]);
+    }
+    /** @test */
+    public function test_it_can_update_wrong_a_product()
+    {
+        $product = Product::factory()->create();
+
+        $response = $this->putJson('/api/product/' . $product->id, [
+            'name' => 'Updated Product',
+            'sku' => 'TEST002',
+            'price' => "abcd",
+            'rate' => "alpha",
+            'stock' => 150,
+        ]);
+        $response->assertStatus(422)->assertJson([
+            "status" => false,
+            "message" => "Error while validation",
+            "errors" => [
+                "price" => [
+                    "The price must be a number."
+                ],
+                "rate" => [
+                    "The rate must be an integer."
+                ]
+            ]
+        ]);
     }
 
     /** @test */

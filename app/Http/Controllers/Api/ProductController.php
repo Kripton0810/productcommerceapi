@@ -11,7 +11,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        return response()->json(['success' => true, 'data' => Product::all(), 'message' => 'Product has been fetched successfully']);
+        return response()->json(['success' => true, 'data' => Product::paginate(20), 'message' => 'Product has been fetched successfully']);
     }
 
     public function store(Request $request)
