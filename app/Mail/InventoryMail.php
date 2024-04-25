@@ -17,9 +17,11 @@ class InventoryMail extends Mailable
      * @return void
      */
     public $rows;
-    public function __construct($rows)
+    public $fileName;
+    public function __construct($rows, $fileName)
     {
         $this->rows = $rows;
+        $this->fileName = $fileName;
     }
 
 
@@ -30,6 +32,6 @@ class InventoryMail extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.inventory');
+        return $this->view('mail.inventory')->attach(public_path('storage/pdf/stock_invoice/' . $this->fileName));
     }
 }
